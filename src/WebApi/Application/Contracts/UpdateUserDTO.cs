@@ -8,7 +8,11 @@ namespace FaculOop.WebApi.Application.Contracts
     /// </summary>
     public class UpdateUserDTO
     {
+
         [Required(ErrorMessage = "O usuáro é obrigatório.")]
-        public string User { get; set; }
+        public string Username { get; set; }
+        
+        [Required(ErrorMessage = "A senha é obrigatória.")]
+        public string Password;
     }
 }

@@ -1,10 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using FaculOop.WebApi.Application.Contracts;
-using FaculOop.WebApi.Domain.UserAggregate;
-using FaculOop.WebApi.Infrastructure.Shared;
+using FaculOop.WebApi.Application.Services;
+using FaculOop.WebApi.Domain.Shared.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FaculOop.WebApi.Application.Controllers
@@ -13,12 +12,11 @@ namespace FaculOop.WebApi.Application.Controllers
     [Route("[controller]")]
     public class UsersController : ControllerBase
     {
-        static IDictionary<int, string> _users = new Dictionary<int, string>();
-        private readonly EFContext _context;
+        private readonly UserAppService _userAppService;
 
-        public UsersController(EFContext context)
+        public UsersController(UserAppService userAppService)
         {
-            _context = context ?? throw new System.ArgumentNullException(nameof(context));
+            _userAppService = userAppService ?? throw new ArgumentNullException(nameof(userAppService));
         }
 
         /// <summary>
@@ -29,26 +27,12 @@ namespace FaculOop.WebApi.Application.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] CreateUserDTO createUser)
         {
-            var user = new User();
-            user.Id = createUser.UserId;
-            user.Username = createUser.User;
-            user.Password = Guid.NewGuid().ToString();
-            _context.Add(user);
-            _context.SaveChanges();
-            return new ObjectResult(createUser.User)
+            var userId = _userAppService.Create(createUser);
+            return new ObjectResult(userId)
             {
                 StatusCode = (int) HttpStatusCode.Created
             };
-            /*
-            if (_users.TryAdd(createUser.UserId, createUser.User))
-            {
-                return new ObjectResult(createUser.User)
-                {
-                    StatusCode = (int) HttpStatusCode.Created
-                };
-            }
-            return BadRequest("Usuário já existe.");
-            */
+            
         }
 
         /// <summary>
@@ -57,7 +41,8 @@ namespace FaculOop.WebApi.Application.Controllers
         /// <returns></returns>
         [HttpGet]
         public IActionResult GetAll() {
-            return Ok(_context.Set<User>().ToList());
+            var list = _userAppService.GetAll();
+            return Ok(list);
         }
 
         /// <summary>
@@ -65,14 +50,18 @@ namespace FaculOop.WebApi.Application.Controllers
         /// </summary>
         /// <param name="userId">Identificador do usuário.</param>
         /// <returns></returns>
-        // [HttpGet("{userId}")]
+        [HttpGet("{userId}")]
         public IActionResult GetById(int userId)
         {
-            if (_users.TryGetValue(userId, out string user))
+            try
             {
+                var user = _userAppService.GetById(userId);
                 return Ok(user);
             }
-            return NotFound();
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
         }
 
         /// <summary>
@@ -84,12 +73,15 @@ namespace FaculOop.WebApi.Application.Controllers
         [HttpPut("{userId}")]
         public IActionResult UpdateById(int userId, [FromBody] UpdateUserDTO updateUser)
         {
-            if (_users.ContainsKey(userId))
+            try
             {
-                _users[userId] = updateUser.User;
+                _userAppService.Update(userId, updateUser);
                 return Ok();
             }
-            return NotFound();
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
         }
 
         /// <summary>
@@ -100,11 +92,15 @@ namespace FaculOop.WebApi.Application.Controllers
         [HttpDelete("{userId}")]
         public IActionResult DeleteById(int userId)
         {
-            if (_users.Remove(userId))
+            try
             {
+                _userAppService.RemoveById(userId);
                 return NoContent();
             }
-            return NotFound();
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
         }
     }
 }

@@ -8,10 +8,9 @@ namespace FaculOop.WebApi.Application.Contracts
     /// </summary>
     public class CreateUserDTO
     {
-        [Required(ErrorMessage = "O identificador do usuáro é obrigatório."),
-        Range(1, int.MaxValue, ErrorMessage = "O identificador deverá ser maior que 1.")]
-        public int UserId { get; set; }
         [Required(ErrorMessage = "O usuáro é obrigatório.")]
-        public string User { get; set; }
+        public string Username { get; set; }
+        [Required(ErrorMessage = "A senha é obrigatória.")]
+        public string Password { get; set; }
     }
 }

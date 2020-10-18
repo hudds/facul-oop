@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FaculOop.WebApi.Application.Services;
+using FaculOop.WebApi.Domain.UserAggregate.Repositories;
 using FaculOop.WebApi.Infrastructure.Shared;
+using FaculOop.WebApi.Infrastructure.UserAggregate.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,6 +31,9 @@ namespace FaculOop.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddScoped<UserAppService>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddDbContext<EFContext>(options => {
                 options.UseSqlite(Configuration.GetConnectionString("sqlite"));

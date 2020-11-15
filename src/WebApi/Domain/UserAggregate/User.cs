@@ -15,7 +15,7 @@ namespace FaculOop.WebApi.Domain.UserAggregate
         public void Update(string username, string password)
         {
             Username = username;
-            Password = password;
+            Password = password ?? Password;
         }
     }
 }

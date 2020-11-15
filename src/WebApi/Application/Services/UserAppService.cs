@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using FaculOop.WebApi.Application.Contracts;
 using FaculOop.WebApi.Domain.UserAggregate;
 using FaculOop.WebApi.Domain.UserAggregate.Repositories;
+using FaculOop.WebApi.Domain.UserAggregate.ValueObjects;
 
 namespace FaculOop.WebApi.Application.Services
 {
@@ -16,14 +17,18 @@ namespace FaculOop.WebApi.Application.Services
 
         public int Create(CreateUserDTO createUser)
         {
-            var user = new User(createUser.Username, createUser.Password);
+            var user = new User(
+                new Username(createUser.Username),
+                new Password(createUser.Password));
             return _userRepository.Create(user);
         }
 
         public void Update(int userId, UpdateUserDTO updateUser)
         {
             var user = _userRepository.GetById(userId);
-            user.Update(updateUser.Username, updateUser.Password);
+            user.Update(
+                new Username(updateUser.Username),
+                new Password(updateUser.Password));
             _userRepository.Update(user);
         }
 

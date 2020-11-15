@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Net;
 using FaculOop.WebApi.Application.Contracts;
 using FaculOop.WebApi.Application.Services;

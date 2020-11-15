@@ -1,20 +1,23 @@
+using FaculOop.WebApi.Domain.UserAggregate.ValueObjects;
+
 namespace FaculOop.WebApi.Domain.UserAggregate
 {
     public class User
     {
-        public User(string username, string password)
+        private User() {}
+        public User(Username username, Password password) : this()
         {
-            Username = username;
+            Username = username ?? throw new System.ArgumentNullException(nameof(username));
             Password = password;
         }
 
         public int Id { get; }
-        public string Username { get; private set; }
-        public string Password { get; private set; }
+        public Username Username { get; private set; }
+        public Password Password { get; private set; }
 
-        public void Update(string username, string password)
+        public void Update(Username username, Password password)
         {
-            Username = username;
+            Username = username ?? throw new System.ArgumentNullException(nameof(username));
             Password = password ?? Password;
         }
     }

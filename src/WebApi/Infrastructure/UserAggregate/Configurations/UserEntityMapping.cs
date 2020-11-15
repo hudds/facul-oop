@@ -11,14 +11,21 @@ namespace FaculOop.WebApi.Infrastructure.UserAggregate.Configurations
             builder.ToTable("usuario");
             builder.HasKey(user => user.Id);
 
-            builder.Property(user => user.Username)
-                .IsRequired()
-                .HasMaxLength(100)
-                .HasColumnName("nome_usuario");
-            builder.Property(user => user.Password)
-                .IsRequired()
-                .HasMaxLength(100)
-                .HasColumnName("senha_usuario");
+            builder.OwnsOne(user => user.Username,
+                username => {
+                    username.Property(x => x.Value)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .HasColumnName("nome_usuario");
+                });
+
+            builder.OwnsOne(user => user.Password,
+                password => {
+                    password.Property(x => x.Value)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .HasColumnName("senha_usuario");
+                });
         }
     }
 }

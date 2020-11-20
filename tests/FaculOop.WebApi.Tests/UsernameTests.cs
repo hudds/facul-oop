@@ -39,7 +39,7 @@ namespace FaculOop.WebApi.Tests
         {
             Username username = new Username("username");
             Username username2 = new Username("username");
-            username.Equals(username2).Should().Be(true);
+            username.Equals(username2).Should().BeTrue();
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace FaculOop.WebApi.Tests
         {
             Username username = new Username("username");
             Username username2 = new Username("username2");
-            username.Equals(username2).Should().Be(false);
+            username.Equals(username2).Should().BeFalse();
         }
 
         [Fact]
@@ -55,7 +55,7 @@ namespace FaculOop.WebApi.Tests
         {
             Username username = new Username("username");
             Username username2 = new Username("username");
-            username.GetHashCode().Equals(username2.GetHashCode()).Should().Be(true);
+            username.GetHashCode().Should().Be(username2.GetHashCode());
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace FaculOop.WebApi.Tests
         {
             Username username = new Username("username");
             Username username2 = new Username("username2");
-            username.GetHashCode().Equals(username2.GetHashCode()).Should().Be(false);
+            username.GetHashCode().Should().NotBe(username2.GetHashCode());
         }
 
     }

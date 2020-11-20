@@ -24,7 +24,9 @@ namespace FaculOop.WebApi.Tests
         public void DadoUmUsuarioQuandoSenhaForNulaNaoDeveContruir()
         {
             Username username = new Username("username");
-            Action action = () =>{ new User(username, null); };
+            Action action = () =>{ 
+                new User(username, null); 
+            };
             action.Should().Throw<ArgumentNullException>();
         }
 
@@ -32,14 +34,18 @@ namespace FaculOop.WebApi.Tests
         public void DadoUmUsuarioQuandoNomeDeUsuarioForNuloNaoDeveContruir()
         {
             Password password = new Password("password");
-            Action action = () => { new User(null, password); };
+            Action action = () => { 
+                new User(null, password); 
+            };
             action.Should().Throw<ArgumentNullException>();
         }
 
         [Fact]
         public void DadoUmUsuarioQuandoSenhaENomeDeUsuarioForemNulosNaoDeveContruir()
         {
-            Action action = () => { new User(null, null); };
+            Action action = () => { 
+                new User(null, null); 
+            };
             action.Should().Throw<ArgumentNullException>();
         }
 
